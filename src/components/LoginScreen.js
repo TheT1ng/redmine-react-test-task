@@ -80,7 +80,7 @@ class LoginScreen extends React.Component {
             <div className="spinner-border text-primary" />
           ) : (
             <button
-              type="button"
+              type="submit"
               className="btn btn-primary"
               onClick={this.onLoginSubmit}
             >

@@ -27,7 +27,8 @@ class ProjectsScreen extends React.Component {
     onLoad();
   }
 
-  onCommentLeave = (projectId, message) => {
+  onCommentLeave = (projectId, message, e) => {
+    e.preventDefault();
     const { onComment } = this.props;
     return onComment({
       projectId,
@@ -57,7 +58,8 @@ class ProjectsScreen extends React.Component {
       [e.target.name]: e.target.value
     });
 
-  onTrackSubmit = () => {
+  onTrackSubmit = e => {
+    e.preventDefault();
     const { onProjectTrack, trackingProjectId, trackingIssueId } = this.props;
     const { hours, message } = this.state;
     onProjectTrack(trackingProjectId, hours, message, trackingIssueId);
@@ -150,7 +152,7 @@ class ProjectsScreen extends React.Component {
               </button>
             </div>
           )}
-          <div
+          <form
             className={`fixedWindow trackWindow position-fixed w-25 overflow-hidden shadow-sm ${
               isModalOpened ? "d-flex" : "d-none"
             } flex-column align-items-center p-2 bg-white rounded`}
@@ -174,7 +176,7 @@ class ProjectsScreen extends React.Component {
             />
             <button
               className="btn btn-primary w-75 align-self-center mb-3"
-              type="button"
+              type="submit"
               onClick={this.onTrackSubmit}
             >
               Submit
@@ -186,7 +188,7 @@ class ProjectsScreen extends React.Component {
             >
               Cancel
             </button>
-          </div>
+          </form>
         </div>
       );
     }

@@ -41,7 +41,7 @@ class SingleProject extends React.Component {
               })}
             </ol>
           </div>
-          <div className="row w-100 mb-3 d-flex flex-sm-column flex-md-row justify-content-center align-items-center">
+          <form className="row w-100 mb-3 d-flex flex-sm-column flex-md-row justify-content-center align-items-center">
             <input
               className="col col-11 col-sm-8 col-md-7 col-lg-7"
               type="text"
@@ -51,12 +51,12 @@ class SingleProject extends React.Component {
             />
             <button
               className="col col-11 col-sm-8 col-md-5 col-lg-5 btn btn-primary btn-sm"
-              type="button"
-              onClick={() => onCommentLeave(projectId, commentMessage)}
+              type="submit"
+              onClick={e => onCommentLeave(projectId, commentMessage, e)}
             >
               Leave a comment
             </button>
-          </div>
+          </form>
           <button
             className="btn btn-success btn-lg mb-3 w-75"
             type="button"
