@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import SingleProject from "./SingleProject";
+import SingleIssue from "./SingleIssue";
 import {
   projectsRequest,
   projectComment,
@@ -9,14 +10,21 @@ import {
 } from "../actionCreators/projectsActionCreators";
 import { issuesRequest } from "../actionCreators/issuesActionCreators";
 import { issuesHide } from "../actions/issuesActions";
+import { projectTrack } from "../actions/projectsActions";
 
 class ProjectsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isModalOpened: false,
+      hours: 0,
+      message: ""
+    };
+  }
+
   componentDidMount() {
     const { onLoad } = this.props;
     onLoad();
-    // trackProjectTime(378)
-    //   .then(resp => resp.json())
-    //   .then(suc => console.log(suc));
   }
 
   onCommentLeave = (projectId, message) => {
@@ -29,17 +37,50 @@ class ProjectsScreen extends React.Component {
 
   onShowIssues = projectId => {
     const { onShowIssues } = this.props;
-    onShowIssues(projectId);
+    this.setState({
+      isModalOpened: false
+    });
+    return onShowIssues(projectId);
   };
 
+  onTrackOpen = (projectId, issueId) => {
+    const { onHideIssues, onTrackOpen } = this.props;
+    onHideIssues();
+    onTrackOpen(projectId, issueId);
+    this.setState({
+      isModalOpened: true
+    });
+  };
+
+  onTrackInput = e =>
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+
+  onTrackSubmit = () => {
+    const { onProjectTrack, trackingProjectId, trackingIssueId } = this.props;
+    const { hours, message } = this.state;
+    onProjectTrack(trackingProjectId, hours, message, trackingIssueId);
+    this.setState({
+      hours: 0,
+      message: "",
+      isModalOpened: false
+    });
+  };
+
+  onModalClose = () =>
+    this.setState({
+      isModalOpened: false
+    });
+
   render() {
+    const { hours, message, isModalOpened } = this.state;
     const {
       projectsList,
       isLoading,
       projectComments,
       issuesList,
-      onHideIssues,
-      onProjectTrack
+      onHideIssues
     } = this.props;
     if (sessionStorage.getItem("isUserLogged") && true) {
       return (
@@ -65,9 +106,8 @@ class ProjectsScreen extends React.Component {
                 projectId={elem.id}
                 onCommentLeave={this.onCommentLeave}
                 onShowIssues={this.onShowIssues}
-                onProjectTrack={onProjectTrack}
                 onHideIssues={onHideIssues}
-                issuesList={issuesList}
+                onTrackOpen={this.onTrackOpen}
                 comments={projectComments.map(comment => {
                   if (comment.projectId === elem.id) {
                     return comment.message;
@@ -77,6 +117,76 @@ class ProjectsScreen extends React.Component {
               />
             ))
           )}
+          {issuesList.length === 0 ? null : (
+            <div className="fixedWindow position-fixed w-25 h-75 overflow-auto shadow-sm d-flex flex-column align-items-center p-2 bg-white rounded">
+              <h5>{`${issuesList[0].project.name} Issues`}</h5>
+              <button
+                type="button"
+                className="position-absolute align-self-end btn btn-sm"
+                onClick={onHideIssues}
+              >
+                x
+              </button>
+              {issuesList.map(elem => (
+                <SingleIssue
+                  key={elem.id}
+                  author={elem.author.name}
+                  created={elem.created_on}
+                  priority={elem.priority.name}
+                  status={elem.status.name}
+                  subject={elem.subject}
+                  updated={elem.updated_on}
+                  projectId={elem.project.id}
+                  issueId={elem.id}
+                  onTrackOpen={this.onTrackOpen}
+                />
+              ))}
+              <button
+                type="button"
+                className="btn btn-danger btn-sm mb-2"
+                onClick={onHideIssues}
+              >
+                Close
+              </button>
+            </div>
+          )}
+          <div
+            className={`fixedWindow trackWindow position-fixed w-25 overflow-hidden shadow-sm ${
+              isModalOpened ? "d-flex" : "d-none"
+            } flex-column align-items-center p-2 bg-white rounded`}
+          >
+            <h5>Track</h5>
+            <input
+              className="w-100 mb-3"
+              type="number"
+              placeholder="How long..."
+              value={hours}
+              onChange={this.onTrackInput}
+              name="hours"
+            />
+            <input
+              className="w-100 mb-3"
+              type="text"
+              placeholder="Comment..."
+              value={message}
+              onChange={this.onTrackInput}
+              name="message"
+            />
+            <button
+              className="btn btn-primary w-75 align-self-center mb-3"
+              type="button"
+              onClick={this.onTrackSubmit}
+            >
+              Submit
+            </button>
+            <button
+              className="btn btn-danger w-75 align-self-center"
+              type="button"
+              onClick={this.onModalClose}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       );
     }
@@ -91,6 +201,8 @@ const mapStateToProps = state => {
     isSuccess: state.projectsReducer.isSuccess,
     projectsList: state.projectsReducer.projectsList,
     projectComments: state.projectsReducer.projectComments,
+    trackingProjectId: state.projectsReducer.trackingProjectId,
+    trackingIssueId: state.projectsReducer.trackingIssueId,
     issuesList: state.issuesReducer.issuesList
   };
 };
@@ -101,8 +213,10 @@ const mapDispatchToProps = dispatch => {
     onComment: comment => dispatch(projectComment(comment)),
     onShowIssues: projectsList => dispatch(issuesRequest(projectsList)),
     onHideIssues: () => dispatch(issuesHide()),
-    onProjectTrack: (projectId, hours, comment) =>
-      dispatch(projectTimeTrack(projectId, hours, comment))
+    onTrackOpen: (projectId, issueId) =>
+      dispatch(projectTrack(projectId, issueId)),
+    onProjectTrack: (projectId, hours, comment, issueId) =>
+      dispatch(projectTimeTrack(projectId, hours, comment, issueId))
   };
 };
 

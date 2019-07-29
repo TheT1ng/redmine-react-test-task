@@ -13,7 +13,6 @@ export function issuesRequest(projectId) {
         return resp.json();
       })
       .then(success => {
-        console.log(success.issues);
         dispatch({ type: ISSUES_SUCCESS, issuesList: success.issues });
       })
       .catch(e => {

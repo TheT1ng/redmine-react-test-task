@@ -19,7 +19,7 @@ export function getProjects() {
     headers: {
       "Content-Type": "application/json",
       // Those method can't be called before user logs in, so no need to validate once more
-      Authorization: `Basic ${btoa("test:testtask")}`
+      "X-Redmine-API-Key": "2fda745bb4cdd835fdf41ec1fab82a13ddc1a54c"
     }
   });
 }
@@ -31,7 +31,7 @@ export function getIssuesPerProject(limit, projectId) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${btoa("test:testtask")}`
+        "X-Redmine-API-Key": "2fda745bb4cdd835fdf41ec1fab82a13ddc1a54c"
       }
     }
   );
@@ -50,7 +50,7 @@ export function trackProjectTime(projectId, hours, comment, issueId) {
     }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${btoa("test:testtask")}`
+      "X-Redmine-API-Key": "2fda745bb4cdd835fdf41ec1fab82a13ddc1a54c"
     }
   });
 }

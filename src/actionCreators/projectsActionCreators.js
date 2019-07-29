@@ -5,7 +5,7 @@ import {
   PROJECTS_SUCCESS,
   PROJECTS_FAILED,
   PROJECT_COMMENT,
-  PROJECT_TRACK
+  PROJECT_TRACK_REQUEST
 } from "../constants/actionTypes";
 
 export function projectsRequest() {
@@ -41,11 +41,12 @@ export function projectComment(comment) {
   };
 }
 
-export function projectTimeTrack(projectId, hours, comment) {
+export function projectTimeTrack(projectId, hours, comment, issueId) {
   return dispatch => {
-    dispatch({ type: PROJECT_TRACK });
-    trackProjectTime(projectId, hours, comment)
+    trackProjectTime(projectId, hours, comment, issueId)
       .then(resp => resp.json())
-      .then(suc => console.log(suc));
+      .then(() => {
+        dispatch({ type: PROJECT_TRACK_REQUEST });
+      });
   };
 }

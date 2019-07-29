@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import SingleIssue from "./SingleIssue";
 
 class SingleProject extends React.Component {
   constructor(props) {
@@ -22,12 +20,9 @@ class SingleProject extends React.Component {
       identifier,
       onCommentLeave,
       onShowIssues,
-      onHideIssues,
       projectId,
       comments,
-      issuesList,
-      isSuccess,
-      onProjectTrack
+      onTrackOpen
     } = this.props;
     const { commentMessage } = this.state;
     return (
@@ -65,41 +60,17 @@ class SingleProject extends React.Component {
           <button
             className="btn btn-success btn-lg mb-3 w-75"
             type="button"
-            data-toggle="modal"
-            data-target="#trackingModal"
-            // onClick={() => onProjectTrack(projectId, 9, "From component test")}
+            onClick={() => onTrackOpen(projectId)}
           >
             Track time
           </button>
-          {isSuccess ? (
-            <button
-              className="btn btn-danger btn-lg mb-3 w-75"
-              type="button"
-              onClick={onHideIssues}
-            >
-              Hide issues
-            </button>
-          ) : (
-            <button
-              className="btn btn-dark btn-lg mb-3 w-75"
-              type="button"
-              onClick={() => onShowIssues(projectId)}
-            >
-              Show issues
-            </button>
-          )}
-          {issuesList.map((elem, index) => (
-            <SingleIssue
-              key={elem.id}
-              author={elem.author.name}
-              created={elem.created_on}
-              priority={elem.priority.name}
-              status={elem.status.name}
-              subject={elem.subject}
-              updated={elem.updated_on}
-              orderNum={index + 1}
-            />
-          ))}
+          <button
+            className="btn btn-dark btn-lg mb-3 w-75"
+            type="button"
+            onClick={() => onShowIssues(projectId)}
+          >
+            Show issues
+          </button>
           <a
             className="badge badge-info"
             href={`https://redmine.ekreative.com/projects/${identifier}`}
@@ -114,11 +85,4 @@ class SingleProject extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    isFail: state.issuesReducer.isFail,
-    isSuccess: state.issuesReducer.isSuccess
-  };
-};
-
-export default connect(mapStateToProps)(SingleProject);
+export default SingleProject;

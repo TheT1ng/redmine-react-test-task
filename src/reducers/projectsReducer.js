@@ -4,7 +4,7 @@ import {
   PROJECTS_FAILED,
   PROJECT_COMMENT,
   PROJECT_TRACK,
-  PROJECT_TRACK_SUCCESS
+  PROJECT_TRACK_REQUEST
 } from "../constants/actionTypes";
 
 const initialState = {
@@ -12,7 +12,9 @@ const initialState = {
   isCompleted: false,
   isFail: false,
   projectsList: [],
-  projectComments: JSON.parse(localStorage.getItem("projectComments"))
+  projectComments: JSON.parse(localStorage.getItem("projectComments")) || [], // null exception
+  trackingProjectId: null,
+  trackingIssueId: null
 };
 
 export default (state = initialState, action) => {
@@ -52,12 +54,14 @@ export default (state = initialState, action) => {
     case PROJECT_TRACK:
       return {
         ...state,
-        isSuccess: false
+        trackingProjectId: action.ids.projectId,
+        trackingIssueId: action.ids.issueId
       };
-    case PROJECT_TRACK_SUCCESS:
+    case PROJECT_TRACK_REQUEST:
       return {
         ...state,
-        isSuccess: true
+        trackingProjectId: null,
+        trackingIssueId: null
       };
     default:
       return state;

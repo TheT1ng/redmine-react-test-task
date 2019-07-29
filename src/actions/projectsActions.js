@@ -1,6 +1,9 @@
-import { PROJECT_COMMENT } from "../constants/actionTypes";
+import { PROJECT_TRACK } from "../constants/actionTypes";
 
-export const projectComment = comment => ({
-  type: PROJECT_COMMENT,
-  comment
+export const projectTrack = (projectId, issueId) => ({
+  type: PROJECT_TRACK,
+  ids: {
+    projectId,
+    issueId
+  }
 });

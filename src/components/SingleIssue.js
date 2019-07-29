@@ -7,10 +7,11 @@ const SingleIssue = ({
   status,
   subject,
   updated,
-  orderNum
+  onTrackOpen,
+  projectId,
+  issueId
 }) => (
-  <div className="w-75 pt-2 mb-3 border-top border-bottom border-secondary">
-    <p className="text-right">{orderNum}</p>
+  <div className="w-100 pt-2 mb-3 border-top border-bottom border-secondary d-flex flex-column">
     <p>
       <strong>Author: </strong>
       {author}
@@ -35,7 +36,11 @@ const SingleIssue = ({
       <strong>Last update: </strong>
       {updated}
     </p>
-    <button className="btn btn-success btn-lg mb-3 w-100" type="button">
+    <button
+      className="btn btn-success btn-lg mb-3 w-75 align-self-center"
+      type="button"
+      onClick={() => onTrackOpen(projectId, issueId)}
+    >
       Track time
     </button>
   </div>
