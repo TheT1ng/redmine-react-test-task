@@ -42,11 +42,14 @@ class LoginScreen extends React.Component {
     const { name, password, isRememberChecked } = this.state;
     const { isLoading, isFail } = this.props;
     return (
-      <form className="loginScreen container-fluid" autoComplete="off">
-        <div className="row align-items-center justify-content-center">
+      <form
+        className="d-flex flex-column justify-content-center vh-100 container-fluid"
+        autoComplete="off"
+      >
+        <div className="row align-items-center justify-content-center mb-3">
           <input
             className={`col col-11 col-sm-8 col-md-6 col-lg-4 ${isFail &&
-              "loginInputFail"}`}
+              "border-danger"}`}
             type="text"
             name="name"
             value={name}
@@ -54,10 +57,10 @@ class LoginScreen extends React.Component {
             onChange={this.onUserInput}
           />
         </div>
-        <div className="row align-items-center justify-content-center">
+        <div className="row align-items-center justify-content-center mb-3">
           <input
             className={`col col-11 col-sm-8 col-md-6 col-lg-4 ${isFail &&
-              "loginInputFail"}`}
+              "border-danger"}`}
             type="password"
             name="password"
             value={password}
@@ -65,7 +68,7 @@ class LoginScreen extends React.Component {
             onChange={this.onUserInput}
           />
         </div>
-        <div className="row align-items-center justify-content-center">
+        <div className="row align-items-center justify-content-center mb-3">
           <input
             type="checkbox"
             id="remember"
@@ -73,20 +76,22 @@ class LoginScreen extends React.Component {
             name="isRememberChecked"
             onChange={this.onRememberCheck}
           />
-          <label htmlFor="remember">Remember me</label>
+          <label className="ml-1 mb-0" htmlFor="remember">
+            Remember me
+          </label>
         </div>
         <div className="row align-items-center justify-content-center">
-          {isLoading ? (
-            <div className="spinner-border text-primary" />
-          ) : (
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={this.onLoginSubmit}
-            >
-              Submit
-            </button>
-          )}
+          <button
+            type="submit"
+            className="btn btn-primary col col-11 col-sm-6 col-md-3 col-lg-2"
+            onClick={this.onLoginSubmit}
+          >
+            {isLoading ? (
+              <div className="spinner-border text-success spinner-border-sm" />
+            ) : (
+              "Submit"
+            )}
+          </button>
         </div>
       </form>
     );

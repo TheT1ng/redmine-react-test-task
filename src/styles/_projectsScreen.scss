@@ -1,14 +1,10 @@
 @import "../../node_modules/bootstrap/scss/mixins/_breakpoints";
 
 .projectsContainer {
-  background-color: #ddd;
-  min-height: 100vh;
   overflow-x: hidden;
   .fixedWindow {
     right: 3rem;
-    top: 0;
-    margin-top: 5.05rem;
-    transition: all .5s;
+    top: 5.05rem;
     z-index: 100;
     @include media-breakpoint-between(xs, md) {
       width: 95%!important;

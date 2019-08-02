@@ -11,6 +11,7 @@ import {
 import { issuesRequest } from "../actionCreators/issuesActionCreators";
 import { issuesHide } from "../actions/issuesActions";
 import { projectTrack } from "../actions/projectsActions";
+import TimeTrackModal from "./TimeTrackModal";
 
 class ProjectsScreen extends React.Component {
   constructor(props) {
@@ -84,20 +85,14 @@ class ProjectsScreen extends React.Component {
       issuesList,
       onHideIssues
     } = this.props;
-    if (sessionStorage.getItem("isUserLogged") && true) {
+    if (sessionStorage.getItem("isUserLogged")) {
       return (
-        <div className="projectsContainer pt-4">
-          <div className="row justify-content-center">
-            <div className="col-11 col-sm-8 col-md-6 col-lg-4 d-flex justify-content-center">
-              <h3 className="font-weight-bold text-uppercase text-center">
-                list of all projects
-              </h3>
-            </div>
-          </div>
+        <div className="projectsContainer pt-4 min-vh-100">
+          <h3 className="font-weight-bold text-uppercase text-center">
+            list of all projects
+          </h3>
           {isLoading ? (
-            <div className="w-100 mt-5 d-flex justify-content-center align-items-center">
-              <div className="spinner-border text-primary" />
-            </div>
+            <div className="spinner-border text-primary d-block mx-auto mt-4" />
           ) : (
             projectsList.map(elem => (
               <SingleProject
@@ -152,43 +147,14 @@ class ProjectsScreen extends React.Component {
               </button>
             </div>
           )}
-          <form
-            className={`fixedWindow trackWindow position-fixed w-25 overflow-hidden shadow-sm ${
-              isModalOpened ? "d-flex" : "d-none"
-            } flex-column align-items-center p-2 bg-white rounded`}
-          >
-            <h5>Track</h5>
-            <input
-              className="w-100 mb-3"
-              type="number"
-              placeholder="How long..."
-              value={hours}
-              onChange={this.onTrackInput}
-              name="hours"
-            />
-            <input
-              className="w-100 mb-3"
-              type="text"
-              placeholder="Comment..."
-              value={message}
-              onChange={this.onTrackInput}
-              name="message"
-            />
-            <button
-              className="btn btn-primary w-75 align-self-center mb-3"
-              type="submit"
-              onClick={this.onTrackSubmit}
-            >
-              Submit
-            </button>
-            <button
-              className="btn btn-danger w-75 align-self-center"
-              type="button"
-              onClick={this.onModalClose}
-            >
-              Cancel
-            </button>
-          </form>
+          <TimeTrackModal
+            hours={hours}
+            message={message}
+            isModalOpened={isModalOpened}
+            onModalClose={this.onModalClose}
+            onTrackInput={this.onTrackInput}
+            onTrackSubmit={this.onTrackSubmit}
+          />
         </div>
       );
     }
